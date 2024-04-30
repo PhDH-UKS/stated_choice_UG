@@ -1,0 +1,151 @@
+{% extends "global/Page.html" %}
+{% load otree %}
+
+
+{% block title %}
+{{C.CHOICE}} 8
+{{C.STYLETABLE}}
+{% endblock %}
+
+
+{% block content %}
+
+<table >
+ <td></td>
+        <th>{{C.MILITARY}}</th>
+        <th>{{C.NATIONAL}}</th>
+        <th>{{C.LOCAL}}</th>
+        <th>{{C.LANDING}}</th>
+
+
+
+            </thead>
+
+            <tr>
+                    <th>{{C.FEE}}</th>
+                    <td>
+                         <label id=fee_4 for="choice4">
+                         {{player.value_alt4_A_cs8}}
+                         </label>
+                     </td>
+                    <td>
+                         <label id=fee_3 for="choice3">
+                         {{player.value_alt3_A_cs8}}
+                         </label>
+                     </td>
+                     <td>
+                         <label id=fee_2 for="choice2">
+                         {{player.value_alt2_A_cs8}}
+                         </label>
+                     </td>
+                                        <td>
+                         <label id=fee_1 for="choice1">
+                         {{player.value_alt1_A_cs8}}
+                         </label>
+                     </td>
+
+            </tr>
+			<tr>
+                    <th>{{C.DETECT}}</th>
+                    <td>
+                         <label id=detect_4 for="choice4">
+                         {{player.value_alt4_B_cs8}}
+                         </label>
+                     </td>
+                    <td>
+                         <label id=detect_3 for="choice3">
+                         {{player.value_alt3_B_cs8}}
+                         </label>
+                     </td>
+                    <td>
+                         <label id=detect_2 for="choice2">
+                         {{player.value_alt2_B_cs8}}
+                         </label>
+                     </td>
+                     <td>
+                         <label id=detect_1 for="choice1">
+                         {{player.value_alt1_B_cs8}}
+                         </label>
+                     </td>
+
+
+
+            </tr>
+            <tr>
+                    <th>{{C.CORRUPTION}}</th>
+                    <td>
+                         <label id=corr_4 for="choice4">
+                         {{player.value_alt4_C_cs8}}
+                         </label>
+                     </td>
+                <td>
+                         <label id=corr_3 for="choice3">
+                         {{player.value_alt3_C_cs8}}
+                         </label>
+                     </td>
+                <td>
+                         <label id=corr_2 for="choice2">
+                         {{player.value_alt2_C_cs8}}
+                         </label>
+                     </td>
+                <td>
+                         <label id=corr_1 for="choice1">
+                         {{player.value_alt1_C_cs8}}
+                         </label>
+                     </td>
+
+
+
+            </tr>
+            <tr>
+                    <th>{{C.ELECTION}}</th>
+                    <td>
+                         <label id=elect_4 for="choice4">
+
+                         </label>
+                     </td>
+                    <td>
+                         <label id=elect_3 for="choice3">
+
+                         </label>
+                     </td>
+                    <td>
+                         <label id=elect_2 for="choice2">
+                         {{player.value_alt2_D_cs8}}
+                         </label>
+                     </td>
+                    <td>
+                         <label id=elect_1 for="choice1">
+                         {{player.value_alt1_D_cs8}}
+                         </label>
+                     </td>
+
+
+
+            </tr>
+			<tr>
+                <td style="border-bottom: 1px solid white;"></td>
+
+                <td><input type="radio" name="choice_cs8" id="choice4" value=4>
+               </td>
+
+                <td><input type="radio" name="choice_cs8" id="choice3" value=3>
+               </td>
+                <td><input type="radio" name="choice_cs8" id="choice2" value=2>
+               </td>
+                <td><input type="radio" name="choice_cs8" id="choice1" value=1>
+               </td>
+
+
+
+            </tr>
+
+</table>
+
+        <br>
+        <br>
+
+  <button class="otree-btn-Next btn btn-primary">{{C.NEXT}}</button>
+
+{% endblock %}
+
