@@ -50,8 +50,10 @@ class C(BaseConstants):
 
     WAIT="Lindako"
 
+    prefer_current_label= "Would you prefer to leave the law enforcement system as it is now?"
+
     #style of table (including button#
-    STYLETABLE="<style> .otree-body {font-size: 1.5em;} table {width: 100 %;} tr {border-bottom: 1px solid #ddd;} th, td {border-right: 1px solid #ddd;padding: 10px;text-align: center;}th {background-color: #D6EEEE; width: 20%;} input[type=radio] {width: 100%;height: 2em;}</style>"
+    STYLETABLE="<style> .otree-body {font-size: 1.5em;} table {width: 100 %;} tr {border-bottom: 1px solid #ddd;} th, td {border-right: 1px solid #ddd;padding: 10px;text-align: center;}th {background-color: #D6EEEE; width: 20%;} input[type=radio] {width: 1.5em;height: 1.5em;}</style>"
 
 
 
@@ -172,6 +174,8 @@ class Player(BasePlayer):
     #######################################################################
 
     yearly_payment = models.IntegerField(initial=100000)
+
+
     #CHoices
     choice_cs1 = models.IntegerField(choices=[1, 2, 3, 4],widget=widgets.RadioSelect)
     choice_cs2 = models.IntegerField(choices=[1, 2, 3, 4], widget=widgets.RadioSelect)
@@ -181,6 +185,32 @@ class Player(BasePlayer):
     choice_cs6 = models.IntegerField(choices=[1, 2, 3, 4], widget=widgets.RadioSelect)
     choice_cs7 = models.IntegerField(choices=[1, 2, 3, 4], widget=widgets.RadioSelect)
     choice_cs8 = models.IntegerField(choices=[1, 2, 3, 4], widget=widgets.RadioSelect)
+
+    def make_yes_no_field(**kwargs):
+        ####
+        # Yes-No-Fields
+        ###
+
+        return models.BooleanField(
+            choices=[
+                [True, 'Yee'],
+                [False, 'Nedda'],
+            ],
+            blank=False,
+            widget=widgets.RadioSelectHorizontal,
+            **kwargs, )
+
+        pass
+
+    #Non_preference
+    not_prefer_cs1 = make_yes_no_field(label=C.prefer_current_label)
+    not_prefer_cs2 = make_yes_no_field(label=C.prefer_current_label)
+    not_prefer_cs3 = make_yes_no_field(label=C.prefer_current_label)
+    not_prefer_cs4 = make_yes_no_field(label=C.prefer_current_label)
+    not_prefer_cs5 = make_yes_no_field(label=C.prefer_current_label)
+    not_prefer_cs6 = make_yes_no_field(label=C.prefer_current_label)
+    not_prefer_cs7 = make_yes_no_field(label=C.prefer_current_label)
+    not_prefer_cs8 = make_yes_no_field(label=C.prefer_current_label)
 
     #Alternative specific values
     # Choice Set 1
@@ -534,7 +564,7 @@ class ChoiceSet1Left(Page):
         else: return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs1']
+    form_fields = ['choice_cs1','not_prefer_cs1']
 
     pass
 class ChoiceSet1Right(Page):
@@ -549,7 +579,7 @@ class ChoiceSet1Right(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs1']
+    form_fields = ['choice_cs1','not_prefer_cs1']
 
     pass
 class ChoiceSet2Left(Page):
@@ -564,7 +594,7 @@ class ChoiceSet2Left(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs2']
+    form_fields = ['choice_cs2','not_prefer_cs2']
 
     pass
 class ChoiceSet2Right(Page):
@@ -579,7 +609,7 @@ class ChoiceSet2Right(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs2']
+    form_fields = ['choice_cs2','not_prefer_cs2']
 
     pass
 
@@ -595,7 +625,7 @@ class ChoiceSet3Left(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs3']
+    form_fields = ['choice_cs3','not_prefer_cs3']
 
     pass
 class ChoiceSet3Right(Page):
@@ -610,7 +640,7 @@ class ChoiceSet3Right(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs3']
+    form_fields = ['choice_cs3','not_prefer_cs3']
 
     pass
 
@@ -626,7 +656,7 @@ class ChoiceSet4Left(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs4']
+    form_fields = ['choice_cs4','not_prefer_cs4']
 
     pass
 class ChoiceSet4Right(Page):
@@ -641,7 +671,7 @@ class ChoiceSet4Right(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs4']
+    form_fields = ['choice_cs4','not_prefer_cs4']
 
     pass
 class ChoiceSet5Left(Page):
@@ -656,7 +686,7 @@ class ChoiceSet5Left(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs5']
+    form_fields = ['choice_cs5','not_prefer_cs5']
 
     pass
 class ChoiceSet5Right(Page):
@@ -671,7 +701,7 @@ class ChoiceSet5Right(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs5']
+    form_fields = ['choice_cs5','not_prefer_cs5']
 
 class ChoiceSet6Left(Page):
     @staticmethod
@@ -685,7 +715,7 @@ class ChoiceSet6Left(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs6']
+    form_fields = ['choice_cs6','not_prefer_cs6']
 
     pass
 class ChoiceSet6Right(Page):
@@ -700,7 +730,7 @@ class ChoiceSet6Right(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs6']
+    form_fields = ['choice_cs6','not_prefer_cs6']
 
     pass
 
@@ -716,7 +746,7 @@ class ChoiceSet7Left(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs7']
+    form_fields = ['choice_cs7','not_prefer_cs7']
 
     pass
 class ChoiceSet7Right(Page):
@@ -731,7 +761,7 @@ class ChoiceSet7Right(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs7']
+    form_fields = ['choice_cs7','not_prefer_cs7']
 
     pass
 class ChoiceSet8Left(Page):
@@ -746,7 +776,7 @@ class ChoiceSet8Left(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs8']
+    form_fields = ['choice_cs8','not_prefer_cs8']
 
     pass
 class ChoiceSet8Right(Page):
@@ -761,7 +791,7 @@ class ChoiceSet8Right(Page):
             return display_group(player)
 
     form_model = 'player'
-    form_fields = ['choice_cs8']
+    form_fields = ['choice_cs8','not_prefer_cs8']
 
     pass
 
