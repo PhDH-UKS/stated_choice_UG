@@ -15,16 +15,14 @@ class C(BaseConstants):
     #######################################################################
     # game settings
     #######################################################################
-    # game is part of WP2A of the MultiTipProject
     NAME_IN_URL = 'stated_choice'
-    # groups are only attached in cas of information of each other
     PLAYERS_PER_GROUP = None
-    # only 1 round with three phases ('event phase', 'information phase', investment phase')
+
     NUM_ROUNDS = 1
 
     ##translation
-    NEXT = "next"
-    CHOICE = "choice"
+    NEXT = "Next"
+    CHOICE = "Decision"
 
     LANDING="landing"
     LOCAL="local"
@@ -37,6 +35,7 @@ class C(BaseConstants):
     ELECTION = "direct election"
 
     LOCAL_CURRENCY= "UGX"
+
     NO_CORRUPTION = "no corruption"
     LOW_CORRUPTION = "low corruption"
     HIGH_CORRUPTION = "high corruption"
@@ -49,14 +48,18 @@ class C(BaseConstants):
     NATIONAL="national"
     MILITARY="military"
 
+    WAIT="Lindako"
 
-    STYLETABLE="<style> table {width: 100 %;} tr {border-bottom: 1px solid #ddd;} th, td {border-right: 1px solid #ddd;padding: 10px;text-align: center;}th {background-color: #D6EEEE; width: 20%;} </style>"
+    #style of table (including button#
+    STYLETABLE="<style> .otree-body {font-size: 1.5em;} table {width: 100 %;} tr {border-bottom: 1px solid #ddd;} th, td {border-right: 1px solid #ddd;padding: 10px;text-align: center;}th {background-color: #D6EEEE; width: 20%;} input[type=radio] {width: 100%;height: 2em;}</style>"
 
 
 
 
 
 def creating_session(subsession: Subsession):
+
+    set_treatment(subsession)
     optimal_design=get_stated_choice_list()
     subsession.session.vars['optimal_design']= optimal_design
     max_Block = get_max_Block(optimal_design)
@@ -69,10 +72,6 @@ def creating_session(subsession: Subsession):
                 p.participant.vars['all_choice_sets'].append(row)
             elif (subsession.treatment == "left_up" or subsession.treatment == "right_up") and int(row['Block']) == max_Block+1-i:
                 p.participant.vars['all_choice_sets'].append(row)
-
-        input_from_previous_games(p)
-        set_stated_choice(p)
-
     pass
 
 
@@ -94,11 +93,13 @@ def get_max_Block(optimal_design: list):
     return max_number
 
 def input_from_previous_games(p: Player):
-    #p.yearly_payment=p.participant.vars['yearly_payment']
+    if 'yearly_payment' in p.participant.vars:
+        p.yearly_payment = p.participant.vars['yearly_payment']
     pass
 
 def set_treatment(subsession: Subsession):
-    subsession.treatment = subsession.session.config['treatment']
+    if 'treatment' in subsession.session.config:
+        subsession.treatment = subsession.session.config['treatment']
     pass
 
 def set_stated_choice(p: Player):
@@ -106,8 +107,10 @@ def set_stated_choice(p: Player):
     for j in range(len(choice_sets)):
         if j==0:
             p.participant.vars['choice_set_1'] =choice_sets[j]
+            p.block=int(choice_sets[j]['Block'])
             set_choice_set_1(p)
             set_choice_value_1(p)
+
         elif j==1:
             p.participant.vars['choice_set_2'] =choice_sets[j]
             set_choice_set_2(p)
@@ -146,7 +149,7 @@ def set_stated_choice(p: Player):
 
 
 class Subsession(BaseSubsession):
-    treatment = models.CharField(initial='left_down')
+    treatment = models.StringField(initial='left_down')
     pass
 
 
@@ -168,7 +171,7 @@ class Player(BasePlayer):
     # Choice_Set
     #######################################################################
 
-    yearly_payment=models.IntegerField(initial=100000)
+    yearly_payment = models.IntegerField(initial=100000)
     #CHoices
     choice_cs1 = models.IntegerField(choices=[1, 2, 3, 4],widget=widgets.RadioSelect)
     choice_cs2 = models.IntegerField(choices=[1, 2, 3, 4], widget=widgets.RadioSelect)
@@ -181,6 +184,7 @@ class Player(BasePlayer):
 
     #Alternative specific values
     # Choice Set 1
+    block= models.IntegerField()
 
     # Alternative 1
     alt1_A_cs1 = models.IntegerField()
@@ -522,7 +526,12 @@ def display_group(player: Player):
 class ChoiceSet1Left(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up" ):
+                return True
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return False
+        else: return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs1']
@@ -531,7 +540,13 @@ class ChoiceSet1Left(Page):
 class ChoiceSet1Right(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return False
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return True
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs1']
@@ -540,7 +555,13 @@ class ChoiceSet1Right(Page):
 class ChoiceSet2Left(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return True
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return False
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs2']
@@ -549,7 +570,13 @@ class ChoiceSet2Left(Page):
 class ChoiceSet2Right(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return False
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return True
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs2']
@@ -559,7 +586,13 @@ class ChoiceSet2Right(Page):
 class ChoiceSet3Left(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return True
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return False
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs3']
@@ -568,7 +601,13 @@ class ChoiceSet3Left(Page):
 class ChoiceSet3Right(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return False
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return True
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs3']
@@ -578,7 +617,13 @@ class ChoiceSet3Right(Page):
 class ChoiceSet4Left(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return True
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return False
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs4']
@@ -587,7 +632,13 @@ class ChoiceSet4Left(Page):
 class ChoiceSet4Right(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return False
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return True
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs4']
@@ -596,7 +647,13 @@ class ChoiceSet4Right(Page):
 class ChoiceSet5Left(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return True
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return False
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs5']
@@ -605,7 +662,13 @@ class ChoiceSet5Left(Page):
 class ChoiceSet5Right(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return False
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return True
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs5']
@@ -613,7 +676,13 @@ class ChoiceSet5Right(Page):
 class ChoiceSet6Left(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return True
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return False
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs6']
@@ -622,7 +691,13 @@ class ChoiceSet6Left(Page):
 class ChoiceSet6Right(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return False
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return True
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs6']
@@ -632,7 +707,13 @@ class ChoiceSet6Right(Page):
 class ChoiceSet7Left(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return True
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return False
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs7']
@@ -641,7 +722,13 @@ class ChoiceSet7Left(Page):
 class ChoiceSet7Right(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return False
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return True
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs7']
@@ -650,7 +737,13 @@ class ChoiceSet7Right(Page):
 class ChoiceSet8Left(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return True
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return False
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs8']
@@ -659,7 +752,13 @@ class ChoiceSet8Left(Page):
 class ChoiceSet8Right(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return False
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return True
+        else:
+            return display_group(player)
 
     form_model = 'player'
     form_fields = ['choice_cs8']
@@ -668,7 +767,22 @@ class ChoiceSet8Right(Page):
 
 
 
+class WaitStartChoice(WaitPage):
+    wait_for_all_groups = True
+    title_text = C.WAIT
+    body_text = ""
+
+    def after_all_players_arrive(subsession: Subsession):
+        for p in subsession.get_players():
+            input_from_previous_games(p)
+            set_stated_choice(p)
+        pass
+
+
+
+
 page_sequence = [
+    WaitStartChoice,
     ChoiceSet1Left,
     ChoiceSet1Right,
     ChoiceSet2Left,

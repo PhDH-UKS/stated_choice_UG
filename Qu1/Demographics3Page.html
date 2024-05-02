@@ -5,79 +5,13 @@
 {% endblock %}
 
 {% block content %}
-{% formfield player.other_occupation %}
-<br>
-{% form.hhfracfish.label %}
+{% formfields %}
 
-    <div id="sliders_here"></div>
-
-    <script src="{{ static 'mgslider.js' }}"></script>
-
-    <script>
-        $(document).ready(function (event) {
-            slider1 = new mgslider("hhfracfish", 0, 100, 1);
-            slider1.yourvalue="Omuwendo gwoloze"
-            slider1.f2s = function (val) {
-                                        return val.toFixed(0)+"%";
-                                                            }
-
-            slider1.print(document.getElementById("sliders_here"));
-
-        });
-    </script>
-
-{% formfield player.sav_member %}
-
-{% formfield player.survey_before %}
 
     <br>
-   <button class="otree-btn-next btn btn-primary">Ekidako</button>
+  <button class="otree-btn-Next btn btn-primary">{{C.NEXT}}</button>
 
 {% endblock %}
 {% block styles %}
-      <style type="text/css">
-
-        .otree-body {
-         font-size: 1.5em;
-         }
-    </style>
-
-<style>
-        .mgslider-wrapper {
-            border-spacing: 10px;
-        }
-        .mgslider-limit {
-            width: 10%;
-            min-width: 75px;
-            height: 40px;
-            margin: 100px;
-            text-align: center;
-            background: #eee;
-            border: 1px solid #888;
-        }
-        .mgslider-limit, .mgslider-value {
-            font-variant-numeric: tabular-nums;
-        }
-        .mgslider-before {
-            height: 38px;
-            width: 100%;
-            background: #1e5bff;
-        }
-        .mgslider-feedback {
-            -webkit-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        input[type=range]::-webkit-slider-runnable-track {
-            height: 39px;
-            border-radius: 0;
-        }
-
-        input[type=range]::-webkit-slider-thumb {
-            height: 47px;
-        }
-
-
-    </style>
+ {{C.STYLE}}
 {% endblock %}

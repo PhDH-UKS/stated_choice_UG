@@ -2,9 +2,28 @@ from os import environ
 
 SESSION_CONFIGS = [
     dict(
-         name='stated_choice',
-         app_sequence=['stated_choice'],
-         num_demo_participants=4,
+         name='left_down',
+         app_sequence=['Qu1','stated_choice'],
+         num_demo_participants=2,
+         treatment='left_down'
+     ),
+    dict(
+         name='left_up',
+         app_sequence=['Qu1','stated_choice'],
+         num_demo_participants=2,
+         treatment='left_up'
+     ),
+    dict(
+         name='right_up',
+         app_sequence=['Qu1','stated_choice'],
+         num_demo_participants=2,
+         treatment='right_up'
+     ),
+    dict(
+         name='right_down',
+         app_sequence=['Qu1','stated_choice'],
+         num_demo_participants=2,
+         treatment='right_down'
      ),
 ]
 
