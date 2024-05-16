@@ -1,0 +1,70 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<script>
+function change_num(num_field){
+
+   var value = num_field.value
+   var id = num_field.id
+   var na_answer = document.getElementById(num_field.id+"_na")
+   var na_check = document.getElementById(num_field.id+"_nacheck")
+   if(value!=NaN && value!=null){
+       if(na_check.checked){
+            na_answer.value = "False"
+            na_check.checked = false
+        }
+    }
+}
+
+function check(checkfield){
+    var id = checkfield.id
+    var clear_id = id.replace("_nacheck","")
+    var na_id = clear_id+"_na"
+
+    numchange = document.getElementById(clear_id)
+    na = document.getElementById(na_id)
+
+    if(checkfield.checked){
+        na.value = "True"
+        numchange.value = NaN
+    }
+    else{
+        na.value = "False"
+    }
+
+}
+
+</script>
+{{ if player.use_illegal == "yes" }}
+    {% form.share_illegal.label %}
+    <br>
+    <input id="share_illegal" name="share_illegal" type="number" oninput="change_num(this)"> %
+    <br>   <br>
+{{ endif }}
+
+{{ if player.use_corruption == 'yes' }}
+    {% form.num_corruption.label %}
+    <br>
+    <input id="num_corruption" name="num_corruption" type="number" oninput="change_num(this)"> {{C.TIMES}}
+    <br>   <br>
+{{ endif }}
+
+{% form.numcharge.label %}
+<br>
+<input id="numcharge" name="numcharge" type="number" oninput="change_num(this)"> {{C.TIMES}}
+<br>
+<input id="numcharge_na" name="numcharge_na" type="hidden" value="False">
+<input id="numcharge_nacheck" type="checkbox" type="checkbox" onchange="check(this)"> <label for="numcharge_nacheck"> {{C.NOT_WANT_TO_ANSWER}}</label>
+
+<br>
+<br>
+   <button class="otree-btn-next btn btn-primary">{{C.NEXT}}</button>
+
+{% endblock %}
+{% block styles %}
+     {{C.STYLE}}
+{% endblock %}

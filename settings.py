@@ -25,6 +25,12 @@ SESSION_CONFIGS = [
          num_demo_participants=2,
          treatment='right_down'
      ),
+
+    dict(
+         name='Qu2',
+         app_sequence=['Qu2'],
+         num_demo_participants=2
+     ),
 ]
 
 # if you set a property in SESSION_CONFIG_DEFAULTS, it will be inherited by all configs

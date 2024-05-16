@@ -1,0 +1,31 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+{% formfield player.overfished%}
+<br>
+{% formfield player.limit_fishing%}
+
+    <br>
+{% formfield player.considered_local%}
+
+    <br>
+{% formfield player.newcomers%}
+    <br>
+{% formfield player.conflicts_newcomer%}
+<br>
+
+   <button class="otree-btn-next btn btn-primary">Next</button>
+
+{% endblock %}
+{% block styles %}
+      <style type="text/css">
+
+        .otree-body {
+         font-size: 1.5em;
+         }
+    </style>
+{% endblock %}

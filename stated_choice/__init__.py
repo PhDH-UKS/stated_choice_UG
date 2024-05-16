@@ -23,6 +23,8 @@ class C(BaseConstants):
     ##translation
     NEXT = "Next"
     CHOICE = "Decision"
+    WAIT = "Lindako"
+    EXAMPLE = "Example"
 
     LANDING="landing"
     LOCAL="local"
@@ -48,7 +50,6 @@ class C(BaseConstants):
     NATIONAL="national"
     MILITARY="military"
 
-    WAIT="Lindako"
 
     prefer_current_label= "Would you prefer to leave the law enforcement system as it is now?"
 
@@ -106,6 +107,10 @@ def set_treatment(subsession: Subsession):
 
 def set_stated_choice(p: Player):
     choice_sets =p.participant.vars['all_choice_sets']
+
+    set_choice_value_example_1(p)
+    set_choice_value_example_2(p)
+
     for j in range(len(choice_sets)):
         if j==0:
             p.participant.vars['choice_set_1'] =choice_sets[j]
@@ -175,8 +180,10 @@ class Player(BasePlayer):
 
     yearly_payment = models.IntegerField(initial=100000)
 
+    # Choices
+    choice_example1 = models.IntegerField(choices=[1, 2, 3, 4], widget=widgets.RadioSelect)
+    choice_example2 = models.IntegerField(choices=[1, 2, 3, 4], widget=widgets.RadioSelect)
 
-    #CHoices
     choice_cs1 = models.IntegerField(choices=[1, 2, 3, 4],widget=widgets.RadioSelect)
     choice_cs2 = models.IntegerField(choices=[1, 2, 3, 4], widget=widgets.RadioSelect)
     choice_cs3 = models.IntegerField(choices=[1, 2, 3, 4], widget=widgets.RadioSelect)
@@ -203,6 +210,8 @@ class Player(BasePlayer):
         pass
 
     #Non_preference
+    not_prefer_example1 = make_yes_no_field(label=C.prefer_current_label)
+    not_prefer_example2 = make_yes_no_field(label=C.prefer_current_label)
     not_prefer_cs1 = make_yes_no_field(label=C.prefer_current_label)
     not_prefer_cs2 = make_yes_no_field(label=C.prefer_current_label)
     not_prefer_cs3 = make_yes_no_field(label=C.prefer_current_label)
@@ -213,8 +222,50 @@ class Player(BasePlayer):
     not_prefer_cs8 = make_yes_no_field(label=C.prefer_current_label)
 
     #Alternative specific values
-    # Choice Set 1
+
     block= models.IntegerField()
+
+    # Example1
+    # Alternative1
+    alt1_A_example1 = models.IntegerField(initial=75)
+    alt1_B_example1 = models.IntegerField(initial=90)
+    alt1_C_example1 = models.IntegerField(initial=0)
+    alt1_D_example1 = models.IntegerField(initial=1)
+    # Alternative2
+    alt2_A_example1 = models.IntegerField(initial=100)
+    alt2_B_example1 = models.IntegerField(initial=50)
+    alt2_C_example1 = models.IntegerField(initial=1)
+    alt2_D_example1 = models.IntegerField(initial=1)
+    # Alternative3
+    alt3_A_example1 = models.IntegerField(initial=150)
+    alt3_B_example1 = models.IntegerField(initial=30)
+    alt3_C_example1 = models.IntegerField(initial=1)
+    # Alternative4
+    alt4_A_example1 = models.IntegerField(initial=200)
+    alt4_B_example1 = models.IntegerField(initial=10)
+    alt4_C_example1 = models.IntegerField(initial=2)
+
+    # Example2
+    # Alternative1
+    alt1_A_example2 = models.IntegerField(initial=200)
+    alt1_B_example2 = models.IntegerField(initial=10)
+    alt1_C_example2 = models.IntegerField(initial=2)
+    alt1_D_example2 = models.IntegerField(initial=0)
+    # Alternative2
+    alt2_A_example2 = models.IntegerField(initial=150)
+    alt2_B_example2 = models.IntegerField(initial=50)
+    alt2_C_example2 = models.IntegerField(initial=1)
+    alt2_D_example2 = models.IntegerField(initial=1)
+    # Alternative3
+    alt3_A_example2 = models.IntegerField(initial=100)
+    alt3_B_example2 = models.IntegerField(initial=50)
+    alt3_C_example2 = models.IntegerField(initial=1)
+    # Alternative4
+    alt4_A_example2 = models.IntegerField(initial=75)
+    alt4_B_example2 = models.IntegerField(initial=90)
+    alt4_C_example2 = models.IntegerField(initial=0)
+
+    # Choice Set 1
 
     # Alternative 1
     alt1_A_cs1 = models.IntegerField()
@@ -376,6 +427,45 @@ class Player(BasePlayer):
     alt4_C_cs8 = models.IntegerField()
 
 #displayed values choice sets
+
+    # Alternative 1
+    value_alt1_A_example1 = models.StringField()
+    value_alt1_B_example1 = models.StringField()
+    value_alt1_C_example1 = models.StringField()
+    value_alt1_D_example1 = models.StringField()
+    # Alternative 2
+    value_alt2_A_example1 = models.StringField()
+    value_alt2_B_example1 = models.StringField()
+    value_alt2_C_example1 = models.StringField()
+    value_alt2_D_example1 = models.StringField()
+    # Alternative 3
+    value_alt3_A_example1 = models.StringField()
+    value_alt3_B_example1 = models.StringField()
+    value_alt3_C_example1 = models.StringField()
+    # Alternative 4
+    value_alt4_A_example1 = models.StringField()
+    value_alt4_B_example1 = models.StringField()
+    value_alt4_C_example1 = models.StringField()
+
+    # Choice Set 2
+    # Alternative 1
+    value_alt1_A_example2 = models.StringField()
+    value_alt1_B_example2 = models.StringField()
+    value_alt1_C_example2 = models.StringField()
+    value_alt1_D_example2 = models.StringField()
+    # Alternative 2
+    value_alt2_A_example2 = models.StringField()
+    value_alt2_B_example2 = models.StringField()
+    value_alt2_C_example2 = models.StringField()
+    value_alt2_D_example2 = models.StringField()
+    # Alternative 3
+    value_alt3_A_example2 = models.StringField()
+    value_alt3_B_example2 = models.StringField()
+    value_alt3_C_example2 = models.StringField()
+    # Alternative 4
+    value_alt4_A_example2 = models.StringField()
+    value_alt4_B_example2 = models.StringField()
+    value_alt4_C_example2 = models.StringField()
 
     # Choice Set 1
 
@@ -553,6 +643,65 @@ def display_group(player: Player):
         return True
 
 # PAGES
+class ChoiceExample1Left(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up" ):
+                return True
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return False
+        else: return display_group(player)
+
+    form_model = 'player'
+    form_fields = ['choice_example1','not_prefer_example1']
+
+    pass
+class ChoiceExample1Right(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return False
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return True
+        else:
+            return display_group(player)
+
+    form_model = 'player'
+    form_fields = ['choice_example1','not_prefer_example1']
+
+    pass
+class ChoiceExample2Left(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return True
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return False
+        else:
+            return display_group(player)
+
+    form_model = 'player'
+    form_fields = ['choice_example2','not_prefer_example2']
+
+    pass
+class ChoiceExample2Right(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        if display_group(player):
+            if (player.subsession.treatment == "left_down" or player.subsession.treatment == "left_up"):
+                return False
+            elif (player.subsession.treatment == "right_down" or player.subsession.treatment == "right_up"):
+                return True
+        else:
+            return display_group(player)
+
+    form_model = 'player'
+    form_fields = ['choice_example2','not_prefer_example2']
+
+    pass
 class ChoiceSet1Left(Page):
     @staticmethod
     def is_displayed(player: Player):
@@ -809,10 +958,20 @@ class WaitStartChoice(WaitPage):
         pass
 
 
+class Wait(WaitPage):
+    wait_for_all_groups = True
+    title_text = C.WAIT
+    body_text = ""
+
 
 
 page_sequence = [
     WaitStartChoice,
+    ChoiceExample1Left,
+    ChoiceExample1Right,
+    ChoiceExample2Left,
+    ChoiceExample2Right,
+    Wait,
     ChoiceSet1Left,
     ChoiceSet1Right,
     ChoiceSet2Left,
@@ -832,6 +991,47 @@ page_sequence = [
 
 ]
 
+
+def set_choice_value_example_1(p: Player):
+    # Alternative 1
+    p.value_alt1_A_example1 = value_price(int(p.alt1_A_example1), p.yearly_payment)
+    p.value_alt1_B_example1 = value_detection(int(p.alt1_B_example1))
+    p.value_alt1_C_example1 = value_corruption(int(p.alt1_C_example1))
+    p.value_alt1_D_example1 = value_election(int(p.alt1_D_example1))
+    # Alternative 2
+    p.value_alt2_A_example1 = value_price(int(p.alt2_A_example1), p.yearly_payment)
+    p.value_alt2_B_example1 = value_detection(int(p.alt2_B_example1))
+    p.value_alt2_C_example1 = value_corruption(int(p.alt2_C_example1))
+    p.value_alt2_D_example1 = value_election(int(p.alt2_D_example1))
+    # Alternative 3
+    p.value_alt3_A_example1 = value_price(int(p.alt3_A_example1), p.yearly_payment)
+    p.value_alt3_B_example1 = value_detection(int(p.alt3_B_example1))
+    p.value_alt3_C_example1 = value_corruption(int(p.alt3_C_example1))
+    # Alternative 4
+    p.value_alt4_A_example1 = value_price(int(p.alt4_A_example1), p.yearly_payment)
+    p.value_alt4_B_example1 = value_detection(int(p.alt4_B_example1))
+    p.value_alt4_C_example1 = value_corruption(int(p.alt4_C_example1))
+
+
+def set_choice_value_example_2(p: Player):
+    # Alternative 1
+    p.value_alt1_A_example2 = value_price(int(p.alt1_A_example2), p.yearly_payment)
+    p.value_alt1_B_example2 = value_detection(int(p.alt1_B_example2))
+    p.value_alt1_C_example2 = value_corruption(int(p.alt1_C_example2))
+    p.value_alt1_D_example2 = value_election(int(p.alt1_D_example2))
+    # Alternative 2
+    p.value_alt2_A_example2 = value_price(int(p.alt2_A_example2), p.yearly_payment)
+    p.value_alt2_B_example2 = value_detection(int(p.alt2_B_example2))
+    p.value_alt2_C_example2 = value_corruption(int(p.alt2_C_example2))
+    p.value_alt2_D_example2 = value_election(int(p.alt2_D_example2))
+    # Alternative 3
+    p.value_alt3_A_example2 = value_price(int(p.alt3_A_example2), p.yearly_payment)
+    p.value_alt3_B_example2 = value_detection(int(p.alt3_B_example2))
+    p.value_alt3_C_example2 = value_corruption(int(p.alt3_C_example2))
+    # Alternative 4
+    p.value_alt4_A_example2 = value_price(int(p.alt4_A_example2), p.yearly_payment)
+    p.value_alt4_B_example2 = value_detection(int(p.alt4_B_example2))
+    p.value_alt4_C_example2 = value_corruption(int(p.alt4_C_example2))
 
 def set_choice_set_1(p: Player):
     choice_set = p.participant.vars['choice_set_1']
@@ -1021,6 +1221,9 @@ def set_choice_set_8(p: Player):
     p.alt4_A_cs8 = int(choice_set['alt4_A'])
     p.alt4_B_cs8 = int(choice_set['alt4_B'])
     p.alt4_C_cs8 = int(choice_set['alt4_C'])
+
+
+
 
 def set_choice_value_1(p: Player):
     choice_set = p.participant.vars['choice_set_1']
@@ -1213,7 +1416,7 @@ def set_choice_value_8(p: Player):
 
 
 def value_price(percent: int, fee:int):
-    price = percent*0.01*fee
+    price = int(round(percent*0.01*fee,-1))
     currency = C.LOCAL_CURRENCY
     return currency+" "+str(price)
 

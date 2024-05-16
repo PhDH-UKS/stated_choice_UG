@@ -1,0 +1,24 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+
+{% form.age.label %}
+<br>
+<input id="age" name="age" type="number"> {{C.YEARS}}
+<br>
+<br>
+{% formfield player.gender %}
+
+{% formfield player.region_origin %}
+<br>
+
+  <button class="otree-btn-Next btn btn-primary">{{C.NEXT}}</button>
+
+{% endblock %}
+{% block styles %}
+ {{C.STYLE}}
+{% endblock %}

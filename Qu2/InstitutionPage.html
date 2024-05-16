@@ -1,0 +1,67 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+<script>
+function change_num(num_field){
+
+   var value = num_field.value
+   var id = num_field.id
+   var na_answer = document.getElementById(num_field.id+"_na")
+   var na_check = document.getElementById(num_field.id+"_nacheck")
+   if(value!=NaN && value!=null){
+       if(na_check.checked){
+            na_answer.value = "False"
+            na_check.checked = false
+        }
+    }
+}
+
+function check(checkfield){
+    var id = checkfield.id
+    var clear_id = id.replace("_nacheck","")
+    var na_id = clear_id+"_na"
+
+    numchange = document.getElementById(clear_id)
+    na = document.getElementById(na_id)
+
+    if(checkfield.checked){
+        na.value = "True"
+        numchange.value = NaN
+    }
+    else{
+        na.value = "False"
+    }
+
+}
+
+</script>
+
+{% formfield player.responsible_monitoring %}
+<br>
+{% formfield player.bmu_member %}
+<br>
+{% form.prob_detect.label %}
+<br>
+<input id="prob_detect" name="prob_detect" type="number" oninput="change_num(this)"> %
+<br>
+<input id="prob_detect_na" name="prob_detect_na" type="hidden" value="False">
+<input id="prob_detect_nacheck" type="checkbox" onchange="check(this)" class="larger" ><label for="prob_detect_nacheck">{{C.NOT_WANT_TO_ANSWER}}</label>
+
+<br>
+
+
+<br>
+{% formfield player.corruption_level %}
+<br>
+
+    <br>
+   <button class="otree-btn-next btn btn-primary">{{C.NEXT}}</button>
+
+{% endblock %}
+{% block styles %}
+     {{C.STYLE}}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+{{C.SEVERITY_INTRO}}
+
+{% formfield player.conflicts_fishers %}
+
+{% formfield player.increase_illegal %}
+
+{% formfield player.change_weather %}
+    <br>
+
+    <br>
+{{C.WORRY_INTRO}}
+    <br>
+{% formfield player.worry_stocks %}
+{% formfield player.worry_arrest %}
+
+    <br>
+   <button class="otree-btn-next btn btn-primary">{{C.NEXT}}</button>
+
+{% endblock %}
+{% block styles %}
+    {{C.STYLE}}
+{% endblock %}

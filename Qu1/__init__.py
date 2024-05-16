@@ -22,7 +22,10 @@ class C(BaseConstants):
 
     ##translation
     NEXT = "Next"
+    WAIT = "Lindako"
     STYLE = "<style> .otree-body {font-size: 1.5em;}</style>"
+    YEARS= "years"
+    CURRENCY="UGX"
 
 
 class Subsession(BaseSubsession):
@@ -70,7 +73,7 @@ class Player(BasePlayer):
         min=18,
         max=120,
         label="1. Oli mukulu kwenkana wa?",
-        doc="We collect age data, between 0 and +120.",
+        doc="We collect age data, between 18 and 120.",
     )
 
     # 2. What is your gender?
@@ -85,23 +88,8 @@ class Player(BasePlayer):
         blank=False,
 
     )
-    # 3. How many years have you lived at this landing site?
-    landingyears = models.PositiveIntegerField(
-        label="3. Myaka emeka gyomaze ku mwalo guno?",
-        # label="4. Umekuwa mvuvi kwa miaka mingapi sasa?",
-        blank=False,
 
-    )
-
-    # 4. How many years have you been a fisher?
-    fishyears = models.PositiveIntegerField(
-        label="4. Myaka emeka gyomaze mu buvubi?",
-        # label="4. Umekuwa mvuvi kwa miaka mingapi sasa?",
-        blank=False,
-
-    )
-
-    # 5. What is your region of origin?
+    # 3. What is your region of origin? (changed from 5 to 3)
     region_origin = models.CharField(
         choices=[['Central Uganda', 'Central Uganda'],
                  ['North Uganda', 'Northern Uganda'],
@@ -112,9 +100,25 @@ class Player(BasePlayer):
                  ],
         widget=widgets.RadioSelect,
         blank=False,
-        label="5. Kitundu ki mwosibuka?"
+        label="3. Kitundu ki mwosibuka?"
         #label="3. Wewe ni mzaliwa wa mkoa gani?"
     )
+    # 4. How many years have you lived at this landing site? (changed from 3 to 4)
+    landingyears = models.PositiveIntegerField(
+        label="4. Myaka emeka gyomaze ku mwalo guno?",
+        # label="4. Umekuwa mvuvi kwa miaka mingapi sasa?",
+        blank=False,
+
+    )
+
+    # 5. How many years have you been a fisher? changed from 4 to 5)
+    fishyears = models.PositiveIntegerField(
+        label="5. Myaka emeka gyomaze mu buvubi?",
+        # label="4. Umekuwa mvuvi kwa miaka mingapi sasa?",
+        blank=False,
+
+    )
+
     # 6.Which gear do you use?
 
     gear = models.CharField(
@@ -122,7 +126,7 @@ class Player(BasePlayer):
         choices=[['gillnet', 'Obutimba'],
                  ['hook', 'Ddobo'],
                  ['small_seine', 'Ekitimba bwa mukene'],
-                 ['other gear', 'Ebirala'],
+                 ['other', 'Ebirala'],
                  ['noanswer', 'Tewali kiddibwaamu']],
         widget=widgets.RadioSelect,
         blank=False
@@ -207,8 +211,7 @@ class Player(BasePlayer):
     #10 What is your role on the boat you currently work on?",
     crewrole = models.CharField(
         # label="What is your role on the boat you currently work on?",
-        label="What is your role on the boat you currently work on?",
-        # choices=['Owner', 'Captain', 'Crew', 'No answer'],
+        label="10. What is your role on the boat you currently work on?",
         # choices=[['owner', 'Mmiliki'],
         #         ['captain', 'Shoferi'],
         #        ['crewmember', 'Mvuvi'],
@@ -226,6 +229,7 @@ class Player(BasePlayer):
     # 11. How much do you pay for a boat license annually?
     yearly_payment = models.PositiveIntegerField(
         label="11. How much do you pay for a boat license annually? (in UGX)",
+        min= 1000,
         blank=False,
     )
 
@@ -252,40 +256,80 @@ def display_group(player: Player):
 ###############################################################################
 # PAGES
 
-class Demographics1Page(Page):
+class DemographicsPage(Page):
     @staticmethod
     def is_displayed(player: Player):
         return display_group(player)
 
     form_model = 'player'
-    form_fields = ['age', 'gender']
+    form_fields = ['age', 'gender','region_origin']
 
     pass
 
 
-class Demographics2Page(Page):
+class FishInfoPage(Page):
     @staticmethod
     def is_displayed(player: Player):
         return display_group(player)
 
     form_model = 'player'
-    form_fields = ['landingyears', 'fishyears']
+    form_fields = ['landingyears', 'fishyears','gear']
 
     pass
 
-class Demographics3Page(Page):
+class FishPracticePageGillnet(Page):
     @staticmethod
     def is_displayed(player: Player):
-        return display_group(player)
+        if player.gear=="gillnet":
+            return display_group(player)
+        else:
+            return False
 
     form_model = 'player'
-    form_fields = ['region_origin', 'gear','target_fish']
+    form_fields = ['mesh_size_gillnet','hook_size','target_fish']
+
+    pass
+class FishPracticePageSmallSeine(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.gear == "small_seine":
+            return display_group(player)
+        else:
+            return False
+
+    form_model = 'player'
+    form_fields = ['mesh_size_small_seine','target_fish']
 
     pass
 
-class FishPracticePage(Page):
+class FishPracticePageHook(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        if player.gear == "hook":
+            return display_group(player)
+        else:
+            return False
+
     form_model = 'player'
-    form_fields = ['mesh_size_gillnet','mesh_size_small_seine','hook_size','propulsion','yearly_payment']
+    form_fields = ['hook_size','target_fish']
+
+    pass
+class FishPracticePageOther(Page):
+    @staticmethod
+    def is_displayed(player: Player):
+        if (player.gear != "hook") & (player.gear != "gillnet") & (player.gear != "small_seine"):
+            return display_group(player)
+        else:
+            return False
+
+    form_model = 'player'
+    form_fields = ['target_fish']
+
+    pass
+
+class FishPracticePage2(Page):
+    form_model = 'player'
+    form_fields = ['propulsion','crewrole','yearly_payment']
 
 
     def is_displayed(player: Player):
@@ -298,7 +342,7 @@ class FishPracticePage(Page):
 
 class Wait(WaitPage):
     wait_for_all_groups = True
-    title_text = "Lindako!"
+    title_text = C.WAIT
     body_text = ""
 
     @staticmethod
@@ -321,10 +365,13 @@ class BreakpointPage(Page):
 
 
 page_sequence = [
-    Demographics1Page,
-    Demographics2Page,
-    Demographics3Page,
-    FishPracticePage,
+    DemographicsPage,
+    FishInfoPage,
+    FishPracticePageGillnet,
+    FishPracticePageSmallSeine,
+    FishPracticePageHook,
+    FishPracticePageOther,
+    FishPracticePage2,
     BreakpointPage,
     Wait,
 ]

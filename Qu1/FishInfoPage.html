@@ -1,0 +1,28 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+
+{% form.landingyears.label %}
+<br>
+<input id="landingyears" name="landingyears" type="number"> years
+<br>
+<br>
+{% form.fishyears.label %}
+<br>
+<input id="fishyears" name="fishyears" type="number"> years
+<br>
+<br>
+{% formfield player.gear %}
+<br>
+
+
+  <button class="otree-btn-Next btn btn-primary">{{C.NEXT}}</button>
+
+{% endblock %}
+{% block styles %}
+ {{C.STYLE}}
+{% endblock %}

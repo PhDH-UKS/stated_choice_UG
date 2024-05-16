@@ -1,0 +1,21 @@
+{% extends "global/Page.html" %}
+{% load otree static %}
+
+{% block title %}
+{% endblock %}
+
+{% block content %}
+
+{% formfield player.propulsion %}
+{% formfield player.crewrole %}
+{% form.yearly_payment.label %}
+<br>
+{{C.CURRENCY}}<input id="yearly_payment" name="yearly_payment" type="number">
+    <br>
+    <br>
+    <button class="otree-btn-Next btn btn-primary">{{C.NEXT}}</button>
+
+{% endblock %}
+{% block styles %}
+ {{C.STYLE}}
+{% endblock %}
